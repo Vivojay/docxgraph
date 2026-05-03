@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>Welcome, {{ user.specialty or "Clinician" }}</h2>
+      <p>Verification: {{ "Verified" if user.is_verified else "Pending" }}</p>
+      <div class="pill">{{ user.region or "Region not set" }}</div>
+      <div style="margin-top: 16px;">
+        <a class="btn" href="/cases/new">Add micro-case</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Explore</h3>
+      <p>Find similar cases or route experts right now.</p>
+      <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+        <a class="btn secondary" href="/search">Case search</a>
+        <a class="btn" href="/match">Expert match</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Quick notes</h3>
+      <ul>
+        <li>No patient identifiers allowed in case text.</li>
+        <li>Peer validation signals usefulness, not popularity.</li>
+        <li>Admin access logs available for orgs.</li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

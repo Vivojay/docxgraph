@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>Sign in</h2>
+      <form onsubmit="login(event)">
+        <label>Email</label>
+        <input type="email" name="email" required />
+        <label>Password</label>
+        <input type="password" name="password" required />
+        <div style="margin-top: 16px;">
+          <button class="btn" type="submit">Login</button>
+        </div>
+      </form>
+      <div class="footer">Need an account? <a href="/register">Register</a></div>
+    </div>
+    <div class="card">
+      <h3>Why ExperienceGraph</h3>
+      <p>Find similar cases, route experts fast, and learn across specialties using verified micro-cases.</p>
+      <div class="pill">Verified clinicians</div>
+      <div class="pill">Graph insights</div>
+      <div class="pill">Peer validation</div>
+    </div>
+  </div>
+{% endblock %}

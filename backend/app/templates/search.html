@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <h2>Case search</h2>
+    <form onsubmit="searchCases(event)">
+      <label>Case summary</label>
+      <textarea name="query" required></textarea>
+      <label>Specialty filter</label>
+      <input type="text" name="specialty" />
+      <label>Region filter</label>
+      <input type="text" name="region" />
+      <label>Tags (comma-separated)</label>
+      <input type="text" name="tags" />
+      <label>Top K</label>
+      <input type="number" name="top_k" value="5" />
+      <div style="margin-top: 16px;">
+        <button class="btn" type="submit">Search</button>
+      </div>
+    </form>
+    <div style="margin-top: 20px;">
+      <h4>Results</h4>
+      <ul id="results"></ul>
+    </div>
+  </div>
+{% endblock %}

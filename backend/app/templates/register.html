@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <h2>Register clinician account</h2>
+    <form onsubmit="register(event)">
+      <label>Organization</label>
+      <input type="text" name="org_name" required />
+      <label>Email</label>
+      <input type="email" name="email" required />
+      <label>Password</label>
+      <input type="password" name="password" required />
+      <label>Specialty</label>
+      <input type="text" name="specialty" />
+      <label>Years Experience</label>
+      <input type="number" name="years_experience" />
+      <label>Region</label>
+      <input type="text" name="region" />
+      <div style="margin-top: 16px;">
+        <button class="btn" type="submit">Create account</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

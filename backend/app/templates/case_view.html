@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <h2>{{ case.title }}</h2>
+    <div style="margin-bottom: 10px;">
+      {% for tag in tags %}
+      <span class="pill">{{ tag }}</span>
+      {% endfor %}
+    </div>
+    <p><strong>Demographics:</strong> {{ case.demographics }}</p>
+    <p><strong>Symptoms:</strong> {{ case.symptoms }}</p>
+    <p><strong>Constraints:</strong> {{ case.constraints }}</p>
+    <p><strong>Suspected Dx:</strong> {{ case.suspected_dx }}</p>
+    <p><strong>Final Dx:</strong> {{ case.final_dx }}</p>
+    <p><strong>Interventions:</strong> {{ case.interventions }}</p>
+    <p><strong>Outcomes:</strong> {{ case.outcomes }}</p>
+    <p><strong>What I'd do differently:</strong> {{ case.what_differently }}</p>
+    <div style="margin-top: 16px;">
+      <button class="btn" onclick="fetch('/api/cases/{{ case.id }}/validate', {method: 'POST'}).then(()=>alert('Validated'))">Endorse usefulness</button>
+    </div>
+  </div>
+{% endblock %}

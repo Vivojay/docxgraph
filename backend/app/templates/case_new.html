@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <h2>New micro-case</h2>
+    <form onsubmit="createCase(event)">
+      <label>Title</label>
+      <input type="text" name="title" required />
+      <label>Demographics (de-identified)</label>
+      <textarea name="demographics"></textarea>
+      <label>Symptoms</label>
+      <textarea name="symptoms" required></textarea>
+      <label>Constraints</label>
+      <textarea name="constraints"></textarea>
+      <label>Suspected Dx</label>
+      <textarea name="suspected_dx"></textarea>
+      <label>Final Dx</label>
+      <textarea name="final_dx"></textarea>
+      <label>Interventions</label>
+      <textarea name="interventions"></textarea>
+      <label>Outcomes</label>
+      <textarea name="outcomes"></textarea>
+      <label>What I'd do differently</label>
+      <textarea name="what_differently"></textarea>
+      <label>Domain tags (comma-separated)</label>
+      <input type="text" name="domain_tags" />
+      <label>ICD-like tags (comma-separated)</label>
+      <input type="text" name="icd_tags" />
+      <div style="margin-top: 16px;">
+        <button class="btn" type="submit">Save case</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

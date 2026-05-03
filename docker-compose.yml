@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: experiencegraph
+      POSTGRES_PASSWORD: experiencegraph
+      POSTGRES_DB: experiencegraph
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://experiencegraph:experiencegraph@db:5432/experiencegraph
+      SECRET_KEY: change-this-secret
+      ACCESS_TOKEN_EXPIRE_MINUTES: 120
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:

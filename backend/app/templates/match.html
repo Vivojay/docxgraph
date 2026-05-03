@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <h2>Expert routing</h2>
+    <form onsubmit="matchExperts(event)">
+      <label>Case summary</label>
+      <textarea name="case_summary" required></textarea>
+      <label>Specialty filter</label>
+      <input type="text" name="specialty" />
+      <label>Region filter</label>
+      <input type="text" name="region" />
+      <label>Urgency</label>
+      <select name="urgency">
+        <option value="">Not specified</option>
+        <option value="routine">Routine</option>
+        <option value="urgent">Urgent</option>
+        <option value="stat">Stat</option>
+      </select>
+      <label>Top K</label>
+      <input type="number" name="top_k" value="5" />
+      <div style="margin-top: 16px;">
+        <button class="btn" type="submit">Match experts</button>
+      </div>
+    </form>
+    <div style="margin-top: 20px;">
+      <h4>Matches</h4>
+      <ul id="matches"></ul>
+    </div>
+  </div>
+{% endblock %}
