@@ -1,0 +1,35 @@
+from .services.embeddings import get_embedder, hash_embedding, normalize_vector
+from .services.retrieval import (
+    constraint_overlap,
+    cosine_similarity,
+    ensure_case_embedding,
+    find_similar_cases,
+    get_case_tags_map,
+    hybrid_score,
+    match_experts,
+    refresh_case_similarity_edges,
+    similar_cases_for_case,
+    specialty_alignment,
+    tag_overlap,
+    tag_rarity_score,
+    upsert_case_embedding,
+)
+
+__all__ = [
+    "constraint_overlap",
+    "cosine_similarity",
+    "ensure_case_embedding",
+    "find_similar_cases",
+    "get_case_tags_map",
+    "get_embedder",
+    "hash_embedding",
+    "hybrid_score",
+    "match_experts",
+    "normalize_vector",
+    "refresh_case_similarity_edges",
+    "similar_cases_for_case",
+    "specialty_alignment",
+    "tag_overlap",
+    "tag_rarity_score",
+    "upsert_case_embedding",
+]

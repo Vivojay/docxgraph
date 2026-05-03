@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <div class="case-header">
+    <div>
+      <h2>Admin control</h2>
+      <p class="muted">Verify clinicians and review audit logs.</p>
+    </div>
+    <div class="actions">
+      <a class="ghost" href="/admin/logs">View access logs</a>
+    </div>
+  </div>
+  <div class="case-list">
+    {% for user, profile in doctors %}
+    <div class="case-item">
+      <div>
+        <strong>{{ user.full_name or user.email }}</strong>
+        <div class="muted">{{ profile.specialty }} - {{ profile.region or 'Region unknown' }}</div>
+      </div>
+      <div class="actions">
+        <span class="pill">{{ 'Verified' if profile.verified else 'Pending' }}</span>
+        <form action="/admin/verify/{{ user.id }}" method="post" class="inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+          <button class="ghost" type="submit">Toggle</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <p class="muted">No doctors yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

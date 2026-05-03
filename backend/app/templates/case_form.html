@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>{{ action }} {{ case_type_label or 'micro-case' }}</h2>
+  <p class="muted">Share de-identified clinical experience with structured context.</p>
+  {% if errors %}
+  <div class="alert error">{{ errors }}</div>
+  {% endif %}
+  <form method="post" class="form" action="{{ form_action or '' }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <input type="hidden" name="case_type" value="{{ case_type or 'general' }}" />
+    <div class="grid two">
+      <label>Specialty
+        <input type="text" name="specialty" value="{{ case.specialty if case else '' }}" required />
+      </label>
+      <label>Demographics
+        <input type="text" name="demographics" value="{{ case.demographics if case else '' }}" />
+      </label>
+    </div>
+    <label>Symptoms
+      <textarea name="symptoms" required>{{ case.symptoms if case else '' }}</textarea>
+    </label>
+    <label>Constraints
+      <textarea name="constraints">{{ case.constraints if case else '' }}</textarea>
+    </label>
+    <div class="grid two">
+      <label>Suspected diagnosis
+        <textarea name="suspected_dx">{{ case.suspected_dx if case else '' }}</textarea>
+      </label>
+      <label>Final diagnosis
+        <textarea name="final_dx">{{ case.final_dx if case else '' }}</textarea>
+      </label>
+    </div>
+    <label>Interventions
+      <textarea name="interventions">{{ case.interventions if case else '' }}</textarea>
+    </label>
+    <label>Outcomes
+      <textarea name="outcomes">{{ case.outcomes if case else '' }}</textarea>
+    </label>
+    <label>What I would do differently
+      <textarea name="what_changed">{{ case.what_changed if case else '' }}</textarea>
+    </label>
+    <div class="grid two">
+      <label>Specialty tags (comma-separated)
+        <input type="text" name="specialty_tags" value="{{ specialty_tags if specialty_tags else '' }}" />
+      </label>
+      <label>Free tags (comma-separated)
+        <input type="text" name="free_tags" value="{{ free_tags if free_tags else '' }}" />
+      </label>
+    </div>
+    <button class="primary" type="submit">{{ action }} case</button>
+  </form>
+</section>
+{% endblock %}

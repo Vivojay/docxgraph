@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>{{ action }} {{ case_type_label or 'ED neuro triage' }}</h2>
+  <p class="muted">Capture time-critical neuro signals and routing decisions.</p>
+  {% if errors %}
+  <div class="alert error">{{ errors }}</div>
+  {% endif %}
+  <form method="post" class="form" action="{{ form_action or '' }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <input type="hidden" name="case_type" value="{{ case_type or 'ed_neuro' }}" />
+    <div class="grid two">
+      <label>Specialty
+        <input type="text" name="specialty" value="{{ case.specialty if case else '' }}" required />
+      </label>
+      <label>Demographics
+        <input type="text" name="demographics" value="{{ case.demographics if case else '' }}" />
+      </label>
+    </div>
+    <label>Symptoms
+      <textarea name="symptoms" required>{{ case.symptoms if case else '' }}</textarea>
+    </label>
+    <label>Constraints
+      <textarea name="constraints">{{ case.constraints if case else '' }}</textarea>
+    </label>
+    <div class="grid two">
+      <label>Suspected diagnosis
+        <textarea name="suspected_dx">{{ case.suspected_dx if case else '' }}</textarea>
+      </label>
+      <label>Final diagnosis
+        <textarea name="final_dx">{{ case.final_dx if case else '' }}</textarea>
+      </label>
+    </div>
+    <label>Interventions
+      <textarea name="interventions">{{ case.interventions if case else '' }}</textarea>
+    </label>
+    <label>Outcomes
+      <textarea name="outcomes">{{ case.outcomes if case else '' }}</textarea>
+    </label>
+    <label>What I would do differently
+      <textarea name="what_changed">{{ case.what_changed if case else '' }}</textarea>
+    </label>
+
+    <div class="card inset">
+      <h3>ED neuro triage fields</h3>
+      <div class="grid three">
+        <label>Onset time
+          <input type="text" name="ed_onset_time" value="{{ template_fields.get('onset_time', '') }}" />
+        </label>
+        <label>Last known well
+          <input type="text" name="ed_last_known_well" value="{{ template_fields.get('last_known_well', '') }}" />
+        </label>
+        <label>NIHSS
+          <input type="number" name="ed_nihss" value="{{ template_fields.get('nihss', '') }}" />
+        </label>
+      </div>
+      <div class="grid three">
+        {% set anticoag = template_fields.get('anticoagulation', '') %}
+        <label>Anticoagulation
+          <select name="ed_anticoagulation">
+            <option value="">Unknown</option>
+            <option value="yes" {% if anticoag == 'yes' %}selected{% endif %}>Yes</option>
+            <option value="no" {% if anticoag == 'no' %}selected{% endif %}>No</option>
+          </select>
+        </label>
+        {% set imaging = template_fields.get('imaging_available', '') %}
+        <label>Imaging available
+          <select name="ed_imaging_available">
+            <option value="">Unknown</option>
+            <option value="yes" {% if imaging == 'yes' %}selected{% endif %}>Yes</option>
+            <option value="limited" {% if imaging == 'limited' %}selected{% endif %}>Limited</option>
+            <option value="no" {% if imaging == 'no' %}selected{% endif %}>No</option>
+          </select>
+        </label>
+        {% set tpa = template_fields.get('tpa_given', '') %}
+        <label>tPA given
+          <select name="ed_tpa_given">
+            <option value="">Unknown</option>
+            <option value="yes" {% if tpa == 'yes' %}selected{% endif %}>Yes</option>
+            <option value="no" {% if tpa == 'no' %}selected{% endif %}>No</option>
+            <option value="contraindicated" {% if tpa == 'contraindicated' %}selected{% endif %}>Contraindicated</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid two">
+        {% set thromb = template_fields.get('thrombectomy_candidate', '') %}
+        <label>Thrombectomy candidate
+          <select name="ed_thrombectomy_candidate">
+            <option value="">Unknown</option>
+            <option value="yes" {% if thromb == 'yes' %}selected{% endif %}>Yes</option>
+            <option value="no" {% if thromb == 'no' %}selected{% endif %}>No</option>
+          </select>
+        </label>
+        <label>Consult time (minutes)
+          <input type="number" name="ed_consult_time_minutes" value="{{ template_fields.get('consult_time_minutes', '') }}" />
+        </label>
+      </div>
+      <div class="grid two">
+        {% set transfer_needed = template_fields.get('transfer_needed') %}
+        <label>Transfer needed
+          <select name="ed_transfer_needed">
+            <option value="">Unknown</option>
+            <option value="yes" {% if transfer_needed is sameas true %}selected{% endif %}>Yes</option>
+            <option value="no" {% if transfer_needed is sameas false %}selected{% endif %}>No</option>
+          </select>
+        </label>
+        {% set transfer_avoided = template_fields.get('transfer_avoided') %}
+        <label>Transfer avoided
+          <select name="ed_transfer_avoided">
+            <option value="">Unknown</option>
+            <option value="yes" {% if transfer_avoided is sameas true %}selected{% endif %}>Yes</option>
+            <option value="no" {% if transfer_avoided is sameas false %}selected{% endif %}>No</option>
+          </select>
+        </label>
+      </div>
+      <label>Neuro deficits
+        <textarea name="ed_deficits">{{ template_fields.get('deficits', '') }}</textarea>
+      </label>
+      <label>Routing notes
+        <textarea name="ed_routing_notes">{{ template_fields.get('routing_notes', '') }}</textarea>
+      </label>
+    </div>
+
+    <div class="grid two">
+      <label>Specialty tags (comma-separated)
+        <input type="text" name="specialty_tags" value="{{ specialty_tags if specialty_tags else '' }}" />
+      </label>
+      <label>Free tags (comma-separated)
+        <input type="text" name="free_tags" value="{{ free_tags if free_tags else '' }}" />
+      </label>
+    </div>
+    <button class="primary" type="submit">{{ action }} case</button>
+  </form>
+</section>
+{% endblock %}

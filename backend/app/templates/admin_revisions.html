@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Case revisions</h2>
+  <p class="muted">Revision history for case #{{ case_id }}.</p>
+  <div class="case-list">
+    {% for rev in revisions %}
+    <div class="case-item">
+      <div>
+        <strong>Revision {{ rev.revision_num }}</strong>
+        <div class="muted">{{ rev.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+        <div class="muted">Snapshot: {{ rev.data_json[:120] }}{% if rev.data_json|length > 120 %}...{% endif %}</div>
+      </div>
+    </div>
+    {% else %}
+    <p class="muted">No revisions yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

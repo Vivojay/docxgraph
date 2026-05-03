@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Choose a case program</h2>
+  <p class="muted">Start with a structured intake for your workflow.</p>
+  <div class="case-type-grid">
+    <a class="case-type-card" href="/cases/new/general">
+      <h3>{{ case_type_labels['general'] }}</h3>
+      <p class="muted">Standard micro-case intake for broad use.</p>
+      <span class="pill">General</span>
+    </a>
+    <a class="case-type-card" href="/cases/new/ed-neuro">
+      <h3>{{ case_type_labels['ed_neuro'] }}</h3>
+      <p class="muted">Time-critical neuro triage and transfer decisions.</p>
+      <span class="pill">ED neuro</span>
+    </a>
+    <a class="case-type-card" href="/cases/new/immunotherapy">
+      <h3>{{ case_type_labels['immuno_toxicity'] }}</h3>
+      <p class="muted">Capture immunotherapy toxicities and routing signals.</p>
+      <span class="pill">Immunotherapy</span>
+    </a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid">
+  <div class="card">
+    <h2>Case feed</h2>
+    <p class="muted">Latest micro-cases across your org.</p>
+    <div class="case-list">
+      {% for case in cases %}
+      <a class="case-item" href="/cases/{{ case.id }}">
+        <div>
+          <strong>{{ case.specialty }}</strong>
+          <div class="muted">{{ case.symptoms[:120] }}{% if case.symptoms|length > 120 %}...{% endif %}</div>
+        </div>
+        <span class="pill">{{ case.created_at.strftime('%Y-%m-%d') }}</span>
+      </a>
+      {% else %}
+      <p class="muted">No cases yet. Create the first one.</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="stack">
+    <div class="card">
+      <h3>Top tags</h3>
+      <div class="tag-list">
+        {% for tag, count in top_tags %}
+        <span class="pill">{{ tag }} - {{ count }}</span>
+        {% else %}
+        <span class="muted">No tags yet</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card">
+      <h3>Program metrics</h3>
+      <div class="metric-list">
+        <div class="metric-row">General cases: {{ case_type_counts['general'] }}</div>
+        <div class="metric-row">ED neuro cases: {{ case_type_counts['ed_neuro'] }}</div>
+        <div class="metric-row">Transfers avoided: {{ ed_metrics.transfer_avoided }}</div>
+        <div class="metric-row">Avg consult (min): {{ ed_metrics.avg_consult_time or 'n/a' }}</div>
+        <div class="metric-row">Immunotherapy cases: {{ case_type_counts['immuno_toxicity'] }}</div>
+        <div class="metric-row">ICU escalations: {{ immuno_metrics.icu_escalations }}</div>
+        <div class="metric-row">Steroid response: {{ immuno_metrics.steroid_response }}</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Quick actions</h3>
+      <div class="actions">
+        <a class="primary" href="/cases/new">New micro-case</a>
+        <a class="ghost" href="/match">Find expert</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

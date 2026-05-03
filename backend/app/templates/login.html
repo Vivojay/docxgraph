@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card narrow">
+  <h1>Welcome back</h1>
+  <p class="muted">Sign in to your clinician workspace.</p>
+  {% if error %}
+  <div class="alert error">{{ error }}</div>
+  {% endif %}
+  <form action="/login" method="post" class="form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <label>Email
+      <input type="email" name="email" required />
+    </label>
+    <label>Password
+      <input type="password" name="password" required />
+    </label>
+    <button type="submit" class="primary">Sign in</button>
+  </form>
+  <div class="callout">
+    <strong>Demo</strong> admin@demo.health / AdminPass123!
+  </div>
+</section>
+{% endblock %}

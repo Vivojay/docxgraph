@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card narrow">
+  <h2>Doctor profile</h2>
+  <p class="muted">Keep your specialty and availability up to date.</p>
+  {% if success %}
+  <div class="alert success">{{ success }}</div>
+  {% endif %}
+  {% if error %}
+  <div class="alert error">{{ error }}</div>
+  {% endif %}
+  <form method="post" class="form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <label>Specialty
+      <input type="text" name="specialty" value="{{ user.profile.specialty if user.profile else '' }}" required />
+    </label>
+    <label>Years of experience
+      <input type="number" name="years_experience" value="{{ user.profile.years_experience if user.profile else '' }}" />
+    </label>
+    <label>Region
+      <input type="text" name="region" value="{{ user.profile.region if user.profile else '' }}" />
+    </label>
+    <label>Availability
+      <select name="availability_status">
+        {% set current = user.profile.availability_status.value if user.profile else 'available' %}
+        <option value="available" {% if current == 'available' %}selected{% endif %}>Available</option>
+        <option value="busy" {% if current == 'busy' %}selected{% endif %}>Busy</option>
+        <option value="offline" {% if current == 'offline' %}selected{% endif %}>Offline</option>
+      </select>
+    </label>
+    <div class="callout">Verification status: <strong>{{ 'Verified' if user.profile and user.profile.verified else 'Pending' }}</strong></div>
+    <div class="callout">Team: <strong>{{ user.team.name if user.team else 'Unassigned' }}</strong></div>
+    <button class="primary" type="submit">Save profile</button>
+  </form>
+</section>
+{% endblock %}

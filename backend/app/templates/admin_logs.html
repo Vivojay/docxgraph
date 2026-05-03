@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Case access logs</h2>
+  <p class="muted">Latest case views for auditability.</p>
+  <div class="case-list">
+    {% for log, case, viewer in logs %}
+    <div class="case-item">
+      <div>
+        <strong>Case #{{ case.id }} - {{ case.specialty }}</strong>
+        <div class="muted">Viewed by {{ viewer.email }} at {{ log.viewed_at.strftime('%Y-%m-%d %H:%M') }}</div>
+        <div class="muted">IP {{ log.ip_address or 'unknown' }}</div>
+      </div>
+      <a class="ghost" href="/cases/{{ case.id }}">Open</a>
+    </div>
+    {% else %}
+    <p class="muted">No logs yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

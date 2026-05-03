@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Expert matching</h2>
+  <p class="muted">Describe a case summary to route to the right clinician.</p>
+  {% if error %}
+  <div class="alert error">{{ error }}</div>
+  {% endif %}
+  <form method="post" class="form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <label>Case program
+      <select name="case_type">
+        <option value="">Any</option>
+        <option value="general" {% if case_type == 'general' %}selected{% endif %}>{{ case_type_labels['general'] }}</option>
+        <option value="ed_neuro" {% if case_type == 'ed_neuro' %}selected{% endif %}>{{ case_type_labels['ed_neuro'] }}</option>
+        <option value="immuno_toxicity" {% if case_type == 'immuno_toxicity' %}selected{% endif %}>{{ case_type_labels['immuno_toxicity'] }}</option>
+      </select>
+    </label>
+    <label>Case summary
+      <textarea name="summary" required>{{ summary if summary else '' }}</textarea>
+    </label>
+    <div class="grid three">
+      <label>Specialty filter
+        <input type="text" name="specialty" value="{{ specialty if specialty else '' }}" />
+      </label>
+      <label>Region filter
+        <input type="text" name="region" value="{{ region if region else '' }}" />
+      </label>
+      <label>Urgency
+        <select name="urgency">
+          <option value="">Normal</option>
+          <option value="high" {% if urgency == 'high' %}selected{% endif %}>High</option>
+          <option value="urgent" {% if urgency == 'urgent' %}selected{% endif %}>Urgent</option>
+        </select>
+      </label>
+    </div>
+    <label>Tags (comma-separated)
+      <input type="text" name="tags" value="{{ tags if tags else '' }}" />
+    </label>
+    <button class="primary" type="submit">Find experts</button>
+  </form>
+</section>
+<section class="card">
+  <h3>Matches</h3>
+  {% if results %}
+  <div class="case-list">
+    {% for result in results %}
+    <div class="case-item">
+      <div>
+        <strong>{{ result.doctor_name }}</strong>
+        <div class="muted">{{ result.specialty }} - {{ result.region or 'Region unknown' }}</div>
+        <ul class="explanation">
+          {% for line in result.explanation %}
+          <li>{{ line }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <span class="pill">Score {{ '%.2f'|format(result.score) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted">Run a match to see ranked clinicians.</p>
+  {% endif %}
+</section>
+{% endblock %}

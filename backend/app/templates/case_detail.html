@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <div class="case-header">
+    <div>
+      <h2>{{ case.specialty }}</h2>
+      <p class="muted">Case #{{ case.id }} - {{ case.created_at.strftime('%Y-%m-%d') }}</p>
+      <span class="pill">{{ case_type_label }}</span>
+    </div>
+    <div class="actions">
+      {% if user.role.value == "admin" or case.author_id == user.id %}
+      <a class="ghost" href="/cases/{{ case.id }}/edit">Edit</a>
+      {% endif %}
+      {% if user.role.value == "admin" %}
+      <a class="ghost" href="/admin/revisions/{{ case.id }}">Revisions</a>
+      {% endif %}
+      {% if not has_endorsed %}
+      <form action="/cases/{{ case.id }}/endorse" method="post" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+        <button class="primary" type="submit">Endorse</button>
+      </form>
+      {% else %}
+      <span class="pill">Endorsed</span>
+      {% endif %}
+    </div>
+  </div>
+  {% if error %}
+  <div class="alert error">{{ error }}</div>
+  {% endif %}
+  <div class="detail-grid">
+    <div>
+      <h4>Symptoms</h4>
+      <p>{{ case.symptoms }}</p>
+      {% if case.demographics %}
+      <h4>Demographics</h4>
+      <p>{{ case.demographics }}</p>
+      {% endif %}
+      {% if case.constraints %}
+      <h4>Constraints</h4>
+      <p>{{ case.constraints }}</p>
+      {% endif %}
+      {% if case.suspected_dx %}
+      <h4>Suspected diagnosis</h4>
+      <p>{{ case.suspected_dx }}</p>
+      {% endif %}
+      {% if case.final_dx %}
+      <h4>Final diagnosis</h4>
+      <p>{{ case.final_dx }}</p>
+      {% endif %}
+      {% if case.interventions %}
+      <h4>Interventions</h4>
+      <p>{{ case.interventions }}</p>
+      {% endif %}
+      {% if case.outcomes %}
+      <h4>Outcomes</h4>
+      <p>{{ case.outcomes }}</p>
+      {% endif %}
+      {% if case.what_changed %}
+      <h4>What I would do differently</h4>
+      <p>{{ case.what_changed }}</p>
+      {% endif %}
+    </div>
+    <div>
+      <div class="card inset">
+        <h4>Tags</h4>
+        <div class="tag-list">
+          {% for tag in tags %}
+          <span class="pill">{{ tag }}</span>
+          {% else %}
+          <span class="muted">No tags</span>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="card inset">
+        <h4>Peer validation</h4>
+        <p class="muted">{{ endorsements }} endorsements</p>
+      </div>
+      <div class="card inset">
+        <h4>{{ case_type_label }} fields</h4>
+        {% if case.case_type == 'ed_neuro' %}
+        <div class="muted">Onset time: {{ template_fields.get('onset_time', 'n/a') }}</div>
+        <div class="muted">Last known well: {{ template_fields.get('last_known_well', 'n/a') }}</div>
+        <div class="muted">NIHSS: {{ template_fields.get('nihss', 'n/a') }}</div>
+        <div class="muted">Anticoagulation: {{ template_fields.get('anticoagulation', 'n/a') }}</div>
+        <div class="muted">Imaging available: {{ template_fields.get('imaging_available', 'n/a') }}</div>
+        <div class="muted">tPA given: {{ template_fields.get('tpa_given', 'n/a') }}</div>
+        {% set transfer_needed = template_fields.get('transfer_needed') %}
+        {% set transfer_avoided = template_fields.get('transfer_avoided') %}
+        <div class="muted">Transfer needed: {{ 'yes' if transfer_needed is sameas true else 'no' if transfer_needed is sameas false else 'n/a' }}</div>
+        <div class="muted">Transfer avoided: {{ 'yes' if transfer_avoided is sameas true else 'no' if transfer_avoided is sameas false else 'n/a' }}</div>
+        <div class="muted">Consult time (min): {{ template_fields.get('consult_time_minutes', 'n/a') }}</div>
+        <div class="muted">Deficits: {{ template_fields.get('deficits', 'n/a') }}</div>
+        <div class="muted">Routing notes: {{ template_fields.get('routing_notes', 'n/a') }}</div>
+        {% elif case.case_type == 'immuno_toxicity' %}
+        <div class="muted">Therapy regimen: {{ template_fields.get('therapy_regimen', 'n/a') }}</div>
+        <div class="muted">Cycle number: {{ template_fields.get('cycle_number', 'n/a') }}</div>
+        <div class="muted">Days since infusion: {{ template_fields.get('days_since_infusion', 'n/a') }}</div>
+        <div class="muted">irAE system: {{ template_fields.get('irae_system', 'n/a') }}</div>
+        <div class="muted">Severity grade: {{ template_fields.get('severity_grade', 'n/a') }}</div>
+        <div class="muted">Steroid response: {{ template_fields.get('steroid_response', 'n/a') }}</div>
+        {% set icu_escalation = template_fields.get('icu_escalation') %}
+        <div class="muted">ICU escalation: {{ 'yes' if icu_escalation is sameas true else 'no' if icu_escalation is sameas false else 'n/a' }}</div>
+        <div class="muted">Consult services: {{ template_fields.get('consult_services', 'n/a') }}</div>
+        <div class="muted">Therapy held: {{ template_fields.get('held_therapy', 'n/a') }}</div>
+        <div class="muted">Rechallenged: {{ template_fields.get('rechallenged', 'n/a') }}</div>
+        {% else %}
+        <span class="muted">No program-specific fields.</span>
+        {% endif %}
+      </div>
+      <div class="card inset">
+        <h4>Cross-specialty insights</h4>
+        {% if specialties %}
+        {% for spec, count in specialties.items() %}
+        <div class="muted">{{ spec }} · {{ count }} similar cases</div>
+        {% endfor %}
+        {% else %}
+        <span class="muted">Not enough data yet</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<section class="card">
+  <h3>Similar cases</h3>
+  <div class="case-list">
+    {% for item in similar_cases %}
+    <a class="case-item" href="/cases/{{ item.case.id }}">
+      <div>
+        <strong>{{ item.case.specialty }}</strong>
+        <div class="muted">{{ item.case.symptoms[:110] }}{% if item.case.symptoms|length > 110 %}...{% endif %}</div>
+      </div>
+      <span class="pill">Score {{ '%.2f'|format(item.score) }}</span>
+    </a>
+    {% else %}
+    <p class="muted">No similar cases yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>{{ action }} {{ case_type_label or 'Immunotherapy toxicity' }}</h2>
+  <p class="muted">Capture irAE patterns and escalation decisions.</p>
+  {% if errors %}
+  <div class="alert error">{{ errors }}</div>
+  {% endif %}
+  <form method="post" class="form" action="{{ form_action or '' }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <input type="hidden" name="case_type" value="{{ case_type or 'immuno_toxicity' }}" />
+    <div class="grid two">
+      <label>Specialty
+        <input type="text" name="specialty" value="{{ case.specialty if case else '' }}" required />
+      </label>
+      <label>Demographics
+        <input type="text" name="demographics" value="{{ case.demographics if case else '' }}" />
+      </label>
+    </div>
+    <label>Symptoms
+      <textarea name="symptoms" required>{{ case.symptoms if case else '' }}</textarea>
+    </label>
+    <label>Constraints
+      <textarea name="constraints">{{ case.constraints if case else '' }}</textarea>
+    </label>
+    <div class="grid two">
+      <label>Suspected diagnosis
+        <textarea name="suspected_dx">{{ case.suspected_dx if case else '' }}</textarea>
+      </label>
+      <label>Final diagnosis
+        <textarea name="final_dx">{{ case.final_dx if case else '' }}</textarea>
+      </label>
+    </div>
+    <label>Interventions
+      <textarea name="interventions">{{ case.interventions if case else '' }}</textarea>
+    </label>
+    <label>Outcomes
+      <textarea name="outcomes">{{ case.outcomes if case else '' }}</textarea>
+    </label>
+    <label>What I would do differently
+      <textarea name="what_changed">{{ case.what_changed if case else '' }}</textarea>
+    </label>
+
+    <div class="card inset">
+      <h3>Immunotherapy toxicity fields</h3>
+      <div class="grid three">
+        <label>Therapy regimen
+          <input type="text" name="im_therapy_regimen" value="{{ template_fields.get('therapy_regimen', '') }}" />
+        </label>
+        <label>Cycle number
+          <input type="number" name="im_cycle_number" value="{{ template_fields.get('cycle_number', '') }}" />
+        </label>
+        <label>Days since infusion
+          <input type="number" name="im_days_since_infusion" value="{{ template_fields.get('days_since_infusion', '') }}" />
+        </label>
+      </div>
+      <div class="grid three">
+        {% set irae = template_fields.get('irae_system', '') %}
+        <label>irAE system
+          <select name="im_irae_system">
+            <option value="">Unknown</option>
+            <option value="cardio" {% if irae == 'cardio' %}selected{% endif %}>Cardio</option>
+            <option value="pulm" {% if irae == 'pulm' %}selected{% endif %}>Pulmonary</option>
+            <option value="gi" {% if irae == 'gi' %}selected{% endif %}>GI</option>
+            <option value="derm" {% if irae == 'derm' %}selected{% endif %}>Derm</option>
+            <option value="neuro" {% if irae == 'neuro' %}selected{% endif %}>Neuro</option>
+            <option value="endo" {% if irae == 'endo' %}selected{% endif %}>Endocrine</option>
+            <option value="renal" {% if irae == 'renal' %}selected{% endif %}>Renal</option>
+            <option value="other" {% if irae == 'other' %}selected{% endif %}>Other</option>
+          </select>
+        </label>
+        <label>Severity grade
+          <input type="number" name="im_severity_grade" value="{{ template_fields.get('severity_grade', '') }}" />
+        </label>
+        {% set steroid = template_fields.get('steroid_response', '') %}
+        <label>Steroid response
+          <select name="im_steroid_response">
+            <option value="">Unknown</option>
+            <option value="yes" {% if steroid == 'yes' %}selected{% endif %}>Yes</option>
+            <option value="partial" {% if steroid == 'partial' %}selected{% endif %}>Partial</option>
+            <option value="no" {% if steroid == 'no' %}selected{% endif %}>No</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid two">
+        {% set icu = template_fields.get('icu_escalation') %}
+        <label>ICU escalation
+          <select name="im_icu_escalation">
+            <option value="">Unknown</option>
+            <option value="yes" {% if icu is sameas true %}selected{% endif %}>Yes</option>
+            <option value="no" {% if icu is sameas false %}selected{% endif %}>No</option>
+          </select>
+        </label>
+        <label>Consult services
+          <input type="text" name="im_consult_services" value="{{ template_fields.get('consult_services', '') }}" />
+        </label>
+      </div>
+      <div class="grid two">
+        {% set held = template_fields.get('held_therapy', '') %}
+        <label>Therapy held
+          <select name="im_held_therapy">
+            <option value="">Unknown</option>
+            <option value="yes" {% if held == 'yes' %}selected{% endif %}>Yes</option>
+            <option value="no" {% if held == 'no' %}selected{% endif %}>No</option>
+          </select>
+        </label>
+        {% set rechallenge = template_fields.get('rechallenged', '') %}
+        <label>Rechallenged
+          <select name="im_rechallenged">
+            <option value="">Unknown</option>
+            <option value="yes" {% if rechallenge == 'yes' %}selected{% endif %}>Yes</option>
+            <option value="no" {% if rechallenge == 'no' %}selected{% endif %}>No</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <label>Specialty tags (comma-separated)
+        <input type="text" name="specialty_tags" value="{{ specialty_tags if specialty_tags else '' }}" />
+      </label>
+      <label>Free tags (comma-separated)
+        <input type="text" name="free_tags" value="{{ free_tags if free_tags else '' }}" />
+      </label>
+    </div>
+    <button class="primary" type="submit">{{ action }} case</button>
+  </form>
+</section>
+{% endblock %}
