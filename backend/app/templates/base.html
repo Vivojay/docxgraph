@@ -25,10 +25,13 @@
       <div class="nav-right">
         {% if user %}
         <a href="/cases/new">New Case</a>
+        <a href="/search">Search</a>
         <a href="/match">Match</a>
         <a href="/profile">Profile</a>
-        {% if user.role.value == "admin" %}
+        {% if user.role.value in ["org_admin", "super_admin"] %}
         <a href="/admin">Admin</a>
+        {% elif user.role.value == "auditor" %}
+        <a href="/admin/logs">Audit</a>
         {% endif %}
         <form action="/logout" method="post" class="inline">
           <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />

@@ -34,6 +34,9 @@
         </select>
       </label>
     </div>
+    <label>Key constraints
+      <textarea name="constraints">{{ constraints if constraints else '' }}</textarea>
+    </label>
     <label>Tags (comma-separated)
       <input type="text" name="tags" value="{{ tags if tags else '' }}" />
     </label>
@@ -49,6 +52,7 @@
       <div>
         <strong>{{ result.doctor_name }}</strong>
         <div class="muted">{{ result.specialty }} - {{ result.region or 'Region unknown' }}</div>
+        <div class="muted">Availability: {{ result.availability }}</div>
         <ul class="explanation">
           {% for line in result.explanation %}
           <li>{{ line }}</li>

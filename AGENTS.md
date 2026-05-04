@@ -7,7 +7,7 @@
 - Keep search hybrid and explainable: semantic + keyword + fuzzy + structured filters.
 - Seed script creates demo orgs, users, cases, and graph edges.
 - Access logs are captured on case view; admins and auditors can review them.
-- React is the primary product UI; backend HTML is a lightweight fallback and API/docs entrypoint.
+- FastAPI templates are the official product UI. Do not make React the primary runtime surface.
 - Default local DB is `experiencegraph_enterprise.db`; use a temp `DATABASE_URL` for isolated evaluation runs.
 - In locked-down environments, keep `EMBEDDING_PROVIDER=auto` or `hash` to avoid network fetches for sentence-transformers.
-- Use `python scripts/dev.py` for combined seed + backend + frontend startup when `npm` is on `PATH`.
+- Prioritise neuro referral and diagnostic routing workflows when making product tradeoffs.

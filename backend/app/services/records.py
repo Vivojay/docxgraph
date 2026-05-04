@@ -10,6 +10,7 @@ class CaseRecord:
     case_type: str
     specialty: str
     specialty_domain: str | None
+    urgency: str | None
     symptoms: str
     demographics: str | None
     age_bucket: str | None
@@ -31,6 +32,7 @@ def build_case_record(case: Case, tags: list[str]) -> CaseRecord:
         case_type=case.case_type,
         specialty=case.specialty,
         specialty_domain=case.specialty_domain,
+        urgency=case.urgency,
         symptoms=case.symptoms,
         demographics=case.demographics,
         age_bucket=case.age_bucket,
@@ -54,6 +56,7 @@ def case_record_text(case: Case, tags: list[str]) -> str:
         record.case_type,
         record.specialty,
         record.specialty_domain or "",
+        record.urgency or "",
         record.symptoms,
         record.demographics or "",
         record.age_bucket or "",
@@ -85,6 +88,7 @@ def case_document_payload(case: Case, tags: list[str]) -> dict:
         "case_type": case.case_type,
         "specialty": case.specialty,
         "specialty_domain": case.specialty_domain,
+        "urgency": case.urgency,
         "symptoms": case.symptoms,
         "demographics": case.demographics,
         "age_bucket": case.age_bucket,

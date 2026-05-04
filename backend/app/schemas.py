@@ -56,6 +56,7 @@ class CaseCreateRequest(BaseModel):
     case_type: str | None = None
     specialty: str
     specialty_domain: str | None = None
+    urgency: str | None = None
     symptoms: str
     demographics: str | None = None
     age_bucket: str | None = None
@@ -83,6 +84,7 @@ class CaseListItem(BaseModel):
     case_type: str
     specialty: str
     specialty_domain: str | None = None
+    urgency: str | None = None
     symptoms: str
     resource_setting: str | None = None
     created_at: datetime
@@ -98,6 +100,7 @@ class CaseDetail(BaseModel):
     case_type: str
     specialty: str
     specialty_domain: str | None = None
+    urgency: str | None = None
     symptoms: str
     demographics: str | None = None
     age_bucket: str | None = None

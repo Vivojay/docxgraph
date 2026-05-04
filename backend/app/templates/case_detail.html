@@ -6,12 +6,15 @@
       <h2>{{ case.specialty }}</h2>
       <p class="muted">Case #{{ case.id }} - {{ case.created_at.strftime('%Y-%m-%d') }}</p>
       <span class="pill">{{ case_type_label }}</span>
+      {% if case.urgency %}
+      <span class="pill">{{ case.urgency|capitalize }}</span>
+      {% endif %}
     </div>
     <div class="actions">
-      {% if user.role.value == "admin" or case.author_id == user.id %}
+      {% if user.role.value in ["org_admin", "super_admin"] or case.author_id == user.id %}
       <a class="ghost" href="/cases/{{ case.id }}/edit">Edit</a>
       {% endif %}
-      {% if user.role.value == "admin" %}
+      {% if user.role.value in ["org_admin", "auditor", "super_admin"] %}
       <a class="ghost" href="/admin/revisions/{{ case.id }}">Revisions</a>
       {% endif %}
       {% if not has_endorsed %}
@@ -39,6 +42,14 @@
       <h4>Constraints</h4>
       <p>{{ case.constraints }}</p>
       {% endif %}
+      {% if case.resource_setting %}
+      <h4>Care setting</h4>
+      <p>{{ case.resource_setting }}</p>
+      {% endif %}
+      {% if case.age_bucket %}
+      <h4>Age bucket</h4>
+      <p>{{ case.age_bucket }}</p>
+      {% endif %}
       {% if case.suspected_dx %}
       <h4>Suspected diagnosis</h4>
       <p>{{ case.suspected_dx }}</p>
@@ -54,6 +65,10 @@
       {% if case.outcomes %}
       <h4>Outcomes</h4>
       <p>{{ case.outcomes }}</p>
+      {% endif %}
+      {% if case.follow_up %}
+      <h4>Follow-up</h4>
+      <p>{{ case.follow_up }}</p>
       {% endif %}
       {% if case.what_changed %}
       <h4>What I would do differently</h4>
@@ -124,10 +139,15 @@
   <h3>Similar cases</h3>
   <div class="case-list">
     {% for item in similar_cases %}
-    <a class="case-item" href="/cases/{{ item.case.id }}">
+    <a class="case-item stacked-item" href="/cases/{{ item.case.id }}">
       <div>
         <strong>{{ item.case.specialty }}</strong>
         <div class="muted">{{ item.case.symptoms[:110] }}{% if item.case.symptoms|length > 110 %}...{% endif %}</div>
+        <ul class="explanation">
+          {% for line in item.explanation %}
+          <li>{{ line }}</li>
+          {% endfor %}
+        </ul>
       </div>
       <span class="pill">Score {{ '%.2f'|format(item.score) }}</span>
     </a>

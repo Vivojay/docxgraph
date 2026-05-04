@@ -2,8 +2,8 @@
 {% block content %}
 <section class="grid">
   <div class="card">
-    <h2>Case feed</h2>
-    <p class="muted">Latest micro-cases across your org.</p>
+    <h2>Latest de-identified cases</h2>
+    <p class="muted">Recent clinician-submitted cases across your organisation.</p>
     <div class="case-list">
       {% for case in cases %}
       <a class="case-item" href="/cases/{{ case.id }}">
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="card">
-      <h3>Program metrics</h3>
+      <h3>Workflow metrics</h3>
       <div class="metric-list">
         <div class="metric-row">General cases: {{ case_type_counts['general'] }}</div>
         <div class="metric-row">ED neuro cases: {{ case_type_counts['ed_neuro'] }}</div>
@@ -45,6 +45,7 @@
       <h3>Quick actions</h3>
       <div class="actions">
         <a class="primary" href="/cases/new">New micro-case</a>
+        <a class="ghost" href="/search">Search cases</a>
         <a class="ghost" href="/match">Find expert</a>
       </div>
     </div>

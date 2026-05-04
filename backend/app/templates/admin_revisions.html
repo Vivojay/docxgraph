@@ -10,6 +10,9 @@
         <strong>Revision {{ rev.revision_num }}</strong>
         <div class="muted">{{ rev.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
         <div class="muted">Snapshot: {{ rev.data_json[:120] }}{% if rev.data_json|length > 120 %}...{% endif %}</div>
+        {% if rev.diff_json %}
+        <div class="muted">Changed fields: {{ rev.diff_json[:140] }}{% if rev.diff_json|length > 140 %}...{% endif %}</div>
+        {% endif %}
       </div>
     </div>
     {% else %}

@@ -123,6 +123,7 @@ class Case(Base):
     case_type = Column(String(50), nullable=False, default="general")
     specialty = Column(String(200), nullable=False)
     specialty_domain = Column(String(200), nullable=True)
+    urgency = Column(String(32), nullable=True)
     symptoms = Column(Text, nullable=False)
     demographics = Column(Text, nullable=True)
     age_bucket = Column(String(50), nullable=True)

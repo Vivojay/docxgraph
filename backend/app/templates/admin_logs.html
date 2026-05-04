@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="card">
+  <h2>Audit trail</h2>
+  <p class="muted">Immutable org-scoped audit events across authentication, case handling, exports, and admin actions.</p>
+  <div class="case-list">
+    {% for log in audit_logs %}
+    <div class="case-item stacked-item">
+      <div>
+        <strong>{{ log.action }}</strong>
+        <div class="muted">{{ log.entity_type }}{% if log.entity_id %} - {{ log.entity_id }}{% endif %}</div>
+        <div class="muted">{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}{% if log.ip_address %} - {{ log.ip_address }}{% endif %}</div>
+      </div>
+    </div>
+    {% else %}
+    <p class="muted">No audit events yet.</p>
+    {% endfor %}
+  </div>
+</section>
+<section class="card">
   <h2>Case access logs</h2>
   <p class="muted">Latest case views for auditability.</p>
   <div class="case-list">

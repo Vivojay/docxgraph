@@ -9,12 +9,41 @@
   <form method="post" class="form" action="{{ form_action or '' }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
     <input type="hidden" name="case_type" value="{{ case_type or 'immuno_toxicity' }}" />
-    <div class="grid two">
+    <div class="callout">
+      Start with the minimum case context, then add toxicity-specific detail that improves escalation and specialist routing.
+    </div>
+    <div class="grid three">
       <label>Specialty
         <input type="text" name="specialty" value="{{ case.specialty if case else '' }}" required />
       </label>
-      <label>Demographics
-        <input type="text" name="demographics" value="{{ case.demographics if case else '' }}" />
+      <label>Age bucket
+        {% set current_age = case.age_bucket if case else '' %}
+        <select name="age_bucket">
+          <option value="">Unknown</option>
+          <option value="18-29" {% if current_age == '18-29' %}selected{% endif %}>18-29</option>
+          <option value="30-39" {% if current_age == '30-39' %}selected{% endif %}>30-39</option>
+          <option value="40-49" {% if current_age == '40-49' %}selected{% endif %}>40-49</option>
+          <option value="50-59" {% if current_age == '50-59' %}selected{% endif %}>50-59</option>
+          <option value="60-69" {% if current_age == '60-69' %}selected{% endif %}>60-69</option>
+          <option value="70+" {% if current_age == '70+' %}selected{% endif %}>70+</option>
+        </select>
+      </label>
+      <label>Urgency
+        {% set current_urgency = case.urgency if case else '' %}
+        <select name="urgency">
+          <option value="">Routine</option>
+          <option value="medium" {% if current_urgency == 'medium' %}selected{% endif %}>Moderate</option>
+          <option value="high" {% if current_urgency == 'high' %}selected{% endif %}>High</option>
+          <option value="urgent" {% if current_urgency == 'urgent' %}selected{% endif %}>Urgent</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid two">
+      <label>Care setting
+        <input type="text" name="resource_setting" value="{{ case.resource_setting if case else 'infusion_center' }}" />
+      </label>
+      <label>Specialty domain
+        <input type="text" name="specialty_domain" value="{{ case.specialty_domain if case else 'oncology' }}" />
       </label>
     </div>
     <label>Symptoms
@@ -24,25 +53,42 @@
       <textarea name="constraints">{{ case.constraints if case else '' }}</textarea>
     </label>
     <div class="grid two">
-      <label>Suspected diagnosis
-        <textarea name="suspected_dx">{{ case.suspected_dx if case else '' }}</textarea>
+      <label>Specialty tags (comma-separated)
+        <input type="text" name="specialty_tags" value="{{ specialty_tags if specialty_tags else '' }}" />
       </label>
-      <label>Final diagnosis
-        <textarea name="final_dx">{{ case.final_dx if case else '' }}</textarea>
+      <label>Free tags (comma-separated)
+        <input type="text" name="free_tags" value="{{ free_tags if free_tags else '' }}" />
       </label>
     </div>
-    <label>Interventions
-      <textarea name="interventions">{{ case.interventions if case else '' }}</textarea>
-    </label>
-    <label>Outcomes
-      <textarea name="outcomes">{{ case.outcomes if case else '' }}</textarea>
-    </label>
-    <label>What I would do differently
-      <textarea name="what_changed">{{ case.what_changed if case else '' }}</textarea>
-    </label>
 
-    <div class="card inset">
+    <details class="card inset" open>
+      <summary><strong>Immunotherapy toxicity detail</strong></summary>
       <h3>Immunotherapy toxicity fields</h3>
+      <div class="grid two">
+        <label>Demographics
+          <input type="text" name="demographics" value="{{ case.demographics if case else '' }}" />
+        </label>
+        <label>Follow-up
+          <input type="text" name="follow_up" value="{{ case.follow_up if case else '' }}" />
+        </label>
+      </div>
+      <div class="grid two">
+        <label>Suspected diagnosis
+          <textarea name="suspected_dx">{{ case.suspected_dx if case else '' }}</textarea>
+        </label>
+        <label>Final diagnosis
+          <textarea name="final_dx">{{ case.final_dx if case else '' }}</textarea>
+        </label>
+      </div>
+      <label>Interventions
+        <textarea name="interventions">{{ case.interventions if case else '' }}</textarea>
+      </label>
+      <label>Outcomes
+        <textarea name="outcomes">{{ case.outcomes if case else '' }}</textarea>
+      </label>
+      <label>What I would do differently
+        <textarea name="what_changed">{{ case.what_changed if case else '' }}</textarea>
+      </label>
       <div class="grid three">
         <label>Therapy regimen
           <input type="text" name="im_therapy_regimen" value="{{ template_fields.get('therapy_regimen', '') }}" />
@@ -113,16 +159,15 @@
           </select>
         </label>
       </div>
-    </div>
-
-    <div class="grid two">
-      <label>Specialty tags (comma-separated)
-        <input type="text" name="specialty_tags" value="{{ specialty_tags if specialty_tags else '' }}" />
-      </label>
-      <label>Free tags (comma-separated)
-        <input type="text" name="free_tags" value="{{ free_tags if free_tags else '' }}" />
-      </label>
-    </div>
+      <div class="grid two">
+        <label>Outcome tags (comma-separated)
+          <input type="text" name="outcome_tags" value="{{ outcome_tags if outcome_tags else '' }}" />
+        </label>
+        <label>Intervention tags (comma-separated)
+          <input type="text" name="intervention_tags" value="{{ intervention_tags if intervention_tags else '' }}" />
+        </label>
+      </div>
+    </details>
     <button class="primary" type="submit">{{ action }} case</button>
   </form>
 </section>

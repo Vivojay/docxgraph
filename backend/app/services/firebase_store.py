@@ -7,7 +7,9 @@ _FIRESTORE_CLIENT = None
 
 
 def firebase_enabled() -> bool:
-    return settings.storage_backend.lower() == "firebase"
+    return settings.storage_backend.lower() == "firebase" and bool(
+        settings.firebase_project_id or settings.firebase_credentials_path or settings.firebase_credentials_json
+    )
 
 
 def get_firestore_client():

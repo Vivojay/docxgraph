@@ -184,6 +184,11 @@ body {
   color: inherit;
 }
 
+.stacked-item {
+  align-items: flex-start;
+  gap: 16px;
+}
+
 .detail-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -227,6 +232,10 @@ body {
 .form {
   display: grid;
   gap: 16px;
+}
+
+.details-form {
+  margin-top: 16px;
 }
 
 label {
@@ -318,6 +327,11 @@ textarea {
   margin: 8px 0 0 18px;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+details summary {
+  cursor: pointer;
+  font-family: var(--font-ui);
 }
 
 @keyframes float-in {

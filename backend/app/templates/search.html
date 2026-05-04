@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Similar-case search</h2>
+  <p class="muted">Find de-identified cases with visible ranking rationale.</p>
+  {% if error %}
+  <div class="alert error">{{ error }}</div>
+  {% endif %}
+  <form method="post" class="form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <label>Case summary
+      <textarea name="summary" required>{{ summary if summary else '' }}</textarea>
+    </label>
+    <div class="grid three">
+      <label>Program
+        <select name="case_type">
+          <option value="">Any</option>
+          <option value="general" {% if case_type == 'general' %}selected{% endif %}>{{ case_type_labels['general'] }}</option>
+          <option value="ed_neuro" {% if case_type == 'ed_neuro' %}selected{% endif %}>{{ case_type_labels['ed_neuro'] }}</option>
+          <option value="immuno_toxicity" {% if case_type == 'immuno_toxicity' %}selected{% endif %}>{{ case_type_labels['immuno_toxicity'] }}</option>
+        </select>
+      </label>
+      <label>Specialty
+        <input type="text" name="specialty" value="{{ specialty if specialty else '' }}" />
+      </label>
+      <label>Age bucket
+        <input type="text" name="age_bucket" value="{{ age_bucket if age_bucket else '' }}" placeholder="60-69" />
+      </label>
+    </div>
+    <label>Key constraints
+      <textarea name="constraints">{{ constraints if constraints else '' }}</textarea>
+    </label>
+    <div class="grid two">
+      <label>Tags (comma-separated)
+        <input type="text" name="tags" value="{{ tags if tags else '' }}" />
+      </label>
+      <label>Result limit
+        <input type="number" name="limit" value="{{ limit if limit else 5 }}" min="1" max="20" />
+      </label>
+    </div>
+    <button class="primary" type="submit">Search cases</button>
+  </form>
+</section>
+<section class="card">
+  <h3>Results</h3>
+  {% if results %}
+  <div class="case-list">
+    {% for item in results %}
+    <a class="case-item stacked-item" href="/cases/{{ item.case.id }}">
+      <div>
+        <strong>{{ item.case.specialty }}</strong>
+        <div class="muted">{{ item.case.symptoms[:140] }}{% if item.case.symptoms|length > 140 %}...{% endif %}</div>
+        <ul class="explanation">
+          {% for line in item.explanation %}
+          <li>{{ line }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <span class="pill">Score {{ '%.2f'|format(item.score) }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="muted">Run a search to compare against prior cases.</p>
+  {% endif %}
+</section>
+{% endblock %}

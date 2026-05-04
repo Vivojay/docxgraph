@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from .auth import get_password_hash
 from .case_types import CASE_TYPE_ED_NEURO, CASE_TYPE_GENERAL, CASE_TYPE_IMMUNO
 from .crud import create_case
-from .db import Base, SessionLocal, engine
+from .db import SessionLocal, ensure_local_schema
 from .jobs.graph import rebuild_case_graph
 from .models import (
     AvailabilityEnum,
@@ -63,6 +63,7 @@ def _case_templates() -> list[dict]:
             "case_type": CASE_TYPE_GENERAL,
             "specialty": "Neurology",
             "specialty_domain": "neuro",
+            "urgency": "medium",
             "symptoms": "Progressive facial numbness with episodic headaches and mild dizziness.",
             "demographics": "adult female",
             "age_bucket": "40-49",
@@ -83,6 +84,7 @@ def _case_templates() -> list[dict]:
             "case_type": CASE_TYPE_GENERAL,
             "specialty": "Cardiology",
             "specialty_domain": "cardio",
+            "urgency": "medium",
             "symptoms": "Intermittent chest tightness after dental procedure.",
             "demographics": "older male",
             "age_bucket": "50-59",
@@ -103,6 +105,7 @@ def _case_templates() -> list[dict]:
             "case_type": CASE_TYPE_ED_NEURO,
             "specialty": "Emergency Medicine",
             "specialty_domain": "neuro",
+            "urgency": "high",
             "symptoms": "Acute right facial droop, slurred speech, and arm weakness.",
             "demographics": "older male",
             "age_bucket": "60-69",
@@ -137,6 +140,7 @@ def _case_templates() -> list[dict]:
             "case_type": CASE_TYPE_IMMUNO,
             "specialty": "Oncology",
             "specialty_domain": "oncology",
+            "urgency": "urgent",
             "symptoms": "Severe diarrhea and abdominal cramping after PD-1 inhibitor.",
             "demographics": "midlife female",
             "age_bucket": "50-59",
@@ -170,7 +174,7 @@ def _case_templates() -> list[dict]:
 
 
 def seed() -> None:
-    Base.metadata.create_all(bind=engine)
+    ensure_local_schema()
     db: Session = SessionLocal()
     try:
         existing = db.query(Organization).filter(Organization.name == "Demo Health").first()
@@ -258,6 +262,7 @@ def seed() -> None:
                     case_type=template["case_type"],
                     specialty=template["specialty"],
                     specialty_domain=template.get("specialty_domain"),
+                    urgency=template.get("urgency"),
                     symptoms=f"{template['symptoms']} Cohort variation {idx + 1}.",
                     demographics=template.get("demographics"),
                     age_bucket=template.get("age_bucket"),
